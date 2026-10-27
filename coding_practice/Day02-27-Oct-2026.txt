@@ -1,0 +1,125 @@
+##Ansible — Install & Enable Nginx
+
+---
+- name: Install and Enable Nginx Server
+  hosts: all
+  become: yes
+
+
+  tasks:
+   - name: Install Nginx
+     yum:
+       name: nginx
+       state: present
+
+   - name: Enable Nginx
+     service:
+       name: nginx
+       state: started
+       enabled: yes
+
+###(state: started
+
+Ensures Nginx is running right now. If it is already running, Ansible leaves it running.
+
+enabled: yes
+
+Ensures Nginx starts automatically after a system reboot. It doesn't, by itself, start the service immediately.)##       
+
+
+## Kubernetes — Deployment with 2 Replicas
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+   name: practice-deployement
+
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+       app: pathnex-app
+  template:
+     metadata:
+         labels:
+           app: pathnex-app
+     spec:
+       containers:
+          -name: app
+           image: nginx:latest
+           ports:
+            - containerPort: 8080  
+
+
+##Jenkins Pipeline — Maven Build
+
+pipeline{
+    agent any
+    tools {
+        maven 'Maven-4.0.1'
+        jdk 'JDK-18'
+    }
+    stages{
+        stage('Checkout'){
+            steps{
+                git branch : main,
+                url : 'https://github.com/Pathnex/Sample-project'
+            }
+        }
+        stage('Compile'){
+            steps{
+                sh 'mvn compile'
+            }
+        }
+        stage('test'){
+            steps{
+                sh 'mvn test'
+            } 
+        }
+        stage('package'){
+            steps{
+                sh 'mvn package'
+            }
+        }
+    }
+}
+
+##(Manage Jenkins → Tool you have to add those tols in the manage jenkins also so that they can be refrenced in the jenkins file)
+
+
+##GitLab CI — Maven Build
+
+stages:
+ - checkout
+ - compile
+ - test 
+ - package
+
+
+git_checkout:
+  stage: checkout
+  script:
+    - git clone url
+    - cd 
+    - ls -la
+
+maven-compile:
+ stage: compile
+ script:
+   - git clone https://github.com/Pathnex/sample-java-app.git
+   - cd sample_java-app
+   - mvn compile 
+
+maven-test
+ stage: test
+ script:
+   - git clone https://github.com/Pathnex/sample-java-app.git
+   - cd sample_java-app
+   - mvn test
+
+maven-package 
+ stage: package
+ script:
+   - git clone https://github.com/Pathnex/sample-java-app.git
+   - cd sample_java-app  
+   - mvn package
